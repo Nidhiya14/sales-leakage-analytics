@@ -1,0 +1,14 @@
+# Run in Ubuntu from the project root, after the Python pipeline creates the files.
+start-dfs.sh
+jps
+
+hdfs dfs -mkdir -p /sales-leakage/raw
+hdfs dfs -mkdir -p /sales-leakage/processed
+hdfs dfs -put -f data/scraped_products.csv /sales-leakage/raw/
+hdfs dfs -put -f data/simulated_sales.csv /sales-leakage/processed/
+hdfs dfs -put -f output/leakage_results.csv /sales-leakage/processed/
+hdfs dfs -ls -R /sales-leakage
+hdfs dfs -cat /sales-leakage/processed/leakage_results.csv | head
+
+# Optional: copy results from HDFS back to local output directory
+hdfs dfs -get -f /sales-leakage/processed/leakage_results.csv output/leakage_results_from_hdfs.csv
